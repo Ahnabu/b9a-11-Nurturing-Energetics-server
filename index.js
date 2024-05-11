@@ -64,11 +64,27 @@ async function run() {
             const sort = req.query.sort
             const result = await restaurantDB.find().sort({ purchase_amount: -1 }).limit(6).toArray();
             res.send(result)
-        })
+        }) 
         app.get('/details/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await restaurantDB.findOne(query);
+            res.send(result);
+        }) 
+        app.put('/details/:id', async (req, res) => {
+            const id = req.params.id
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true };
+            const updatedData = req.body
+            console.log(updatedData);
+            const art = {
+                $set: {
+                    quantity: updatedData.quantity,
+                    purchase_amount: updatedData.purchase_amount
+                }
+            }
+            const result = await restaurantDB.updateOne(filter, art, options);
+
             res.send(result);
         }) 
         app.get('/all', async (req, res) => {
