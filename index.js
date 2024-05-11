@@ -68,7 +68,7 @@ async function run() {
         // jwt 
         app.post('/jwt', async (req, res) => {
             const email = req.body;
-            const token = jwt.sign(email, process.env.SECRET_KEY, { expiresIn: '10d' })
+            const token = jwt.sign(email, process.env.SECRET_KEY, { expiresIn: '10d' }) 
             console.log(email);
             res
                 .cookie('token', token, {
@@ -79,11 +79,16 @@ async function run() {
                 .send({success : true})
         })
 
-        app.post("/logout", async (req, res) => {
+        app.get("/logout", async (req, res) => {
             const user = req.body;
             console.log("logging out", user);
             res
-                .clearCookie("token", { ...cookieOptions, maxAge: 0 })
+                .clearCookie("token", {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+                    maxAge: 0
+                })
                 .send({ success: true });
         });
         // Send a ping to confirm a successful connection
