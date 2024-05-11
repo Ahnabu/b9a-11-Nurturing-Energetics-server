@@ -60,17 +60,17 @@ async function run() {
         app.get('/', (req, res) => {
             res.send('Hello World!')
         })
-        app.get('/top', async (req, res) => {
+        app.get('/top', async (req, res) => { 
             const sort = req.query.sort
             const result = await restaurantDB.find().sort({ purchase_amount: -1 }).limit(6).toArray();
             res.send(result)
         })
         app.get('/details/:id', async (req, res) => {
-            const id = req.params.id
-            const query = {_id : new ObjectId(id)}
-            const result = await restaurantDB.findOne(query).toArray();
-            res.send(result)
-        })
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await restaurantDB.findOne(query);
+            res.send(result);
+        }) 
         app.get('/all', async (req, res) => {
             
             const filter = req.query.filter
