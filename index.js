@@ -55,6 +55,7 @@ async function run() {
    
     try {
         const restaurantDB = client.db('restaurantCollection').collection('allFoods')
+        const userDB = client.db('restaurantCollection').collection('users')
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         app.get('/', (req, res) => {
@@ -69,6 +70,19 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await restaurantDB.findOne(query);
+            res.send(result);
+        }) 
+        app.post('/user', async (req, res) => {
+            const email = req.body;
+            console.log(email);
+            const newUser = await userDB.insertOne(email)
+            res.send(newUser);
+        }) 
+        app.get('/user/:email',verify, async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email }
+            console.log(query);
+            const result = await userDB.findOne(query);
             res.send(result);
         }) 
         app.put('/details/:id', async (req, res) => {
