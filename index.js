@@ -78,6 +78,19 @@ async function run() {
             const newUser = await userDB.insertOne(email)
             res.send(newUser);
         }) 
+        app.post('/add', async (req, res) => {
+            const newFood = req.body;
+            console.log(newFood);
+            const newUser = await restaurantDB.insertOne(newFood)
+            res.send(newUser);
+        }) 
+        app.get('/add/:email',verify, async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email }
+            console.log(query);
+            const result = await restaurantDB.findOne(query);
+            res.send(result);
+        }) 
         app.get('/user/:email',verify, async (req, res) => {
             const email = req.params.email;
             const query = { email: email }
