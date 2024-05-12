@@ -88,7 +88,7 @@ async function run() {
             const email = req.params.email;
             const query = { email: email }
             console.log(query);
-            const result = await restaurantDB.findOne(query);
+            const result = await restaurantDB.find(query);
             res.send(result);
         }) 
         app.get('/user/:email',verify, async (req, res) => {
