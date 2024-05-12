@@ -115,7 +115,7 @@ async function run() {
 
             res.send(result);
         }) 
-        app.put('/update/:id', async (req, res) => {
+        app.put('/update/:id',verify, async (req, res) => {
             const id = req.params.id
             const filter = { _id: new ObjectId(id) }
             console.log(filter);
@@ -135,6 +135,11 @@ async function run() {
             }
             const result = await restaurantDB.updateOne(filter, data, options);
 
+            res.send(result);
+        }) 
+        app.delete('/delete/:id',verify, async (req, res) => {
+            const id = req.params.id
+            const result = await restaurantDB.deleteOne({ _id: new ObjectId(req.params.id) });
             res.send(result);
         }) 
         app.get('/all', async (req, res) => {
