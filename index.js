@@ -85,12 +85,13 @@ async function run() {
             res.send(newUser);
         }) 
         app.get('/add/:email',verify, async (req, res) => {
-            const email = req.params.email;
-            const query = { email: email }
-            console.log(query);
-            const result = await restaurantDB.find(query);
-            res.send(result);
-        }) 
+            const email = req.params.email
+
+            console.log(email);
+            const result = await restaurantDB.find({ email }).toArray()
+
+            res.send(result)
+        })
         app.get('/user/:email',verify, async (req, res) => {
             const email = req.params.email;
             const query = { email: email }
