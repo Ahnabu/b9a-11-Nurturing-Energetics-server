@@ -105,13 +105,35 @@ async function run() {
             const options = { upsert: true };
             const updatedData = req.body
             console.log(updatedData);
-            const art = {
+            const data = {
                 $set: {
                     quantity: updatedData.quantity,
                     purchase_amount: updatedData.purchase_amount
                 }
             }
-            const result = await restaurantDB.updateOne(filter, art, options);
+            const result = await restaurantDB.updateOne(filter, data, options);
+
+            res.send(result);
+        }) 
+        app.put('/update/:id', async (req, res) => {
+            const id = req.params.id
+            const filter = { _id: new ObjectId(id) }
+            console.log(filter);
+            const options = { upsert: true };
+            const updatedData = req.body
+            console.log(updatedData);
+            const data = {
+                $set: {
+                    food_image: updatedData.food_image,
+                    food_name: updatedData.food_name,
+                    food_category: updatedData.food_category,
+                    description: updatedData.description,
+                    price: updatedData.price,
+                    quantity: updatedData.quantity,
+                    food_origin: updatedData.food_origin
+                }
+            }
+            const result = await restaurantDB.updateOne(filter, data, options);
 
             res.send(result);
         }) 
