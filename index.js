@@ -58,6 +58,7 @@ async function run() {
         const userDB = client.db('restaurantCollection').collection('users')
         const buyDB = client.db('restaurantCollection').collection('buyData')
         const galleryDB= client.db('restaurantCollection').collection('gallery')
+        const feedbackDB= client.db('restaurantCollection').collection('feedback')
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         app.get('/', (req, res) => {
@@ -109,7 +110,7 @@ async function run() {
 
             res.send(result)
         })
-        app.get('/all/:chef',verify, async (req, res) => {
+        app.get('/all/:chef', async (req, res) => {
             const chef = req.params.chef
 
             console.log(chef);
@@ -175,6 +176,12 @@ async function run() {
             console.log(filter)
             const result = await restaurantDB.find(query).sort({ purchase_amount: -1 }).toArray();
             res.send(result)
+        })
+        //feedback
+        app.post('/feedback', async (req, res) => {
+            const newFeedback = req.body
+            const feedback = await feedbackDB.insertOne(newFeedback)
+            res.send(feedback)
         })
 
         //gallery
