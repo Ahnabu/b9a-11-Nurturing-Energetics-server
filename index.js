@@ -180,10 +180,14 @@ async function run() {
         //feedback
         app.post('/feedback', async (req, res) => {
             const newFeedback = req.body
+            console.log(newFeedback);
             const feedback = await feedbackDB.insertOne(newFeedback)
             res.send(feedback)
         })
-
+        app.get('/feedback', async (req, res) => {
+            const result = await feedbackDB.find().toArray();
+            res.send(result)
+        })
         //gallery
         app.post('/gallery', async (req, res) => {
             const newFood = req.body;
@@ -193,7 +197,7 @@ async function run() {
         })
         app.get('/gallery', async (req, res) => {
 
-            const result = await galleryDB.find().toArray();
+            const result = await galleryDB.find().limit(6).toArray();
             res.send(result)
         }) 
 
