@@ -57,13 +57,14 @@ async function run() {
         const restaurantDB = client.db('restaurantCollection').collection('allFoods')
         const userDB = client.db('restaurantCollection').collection('users')
         const buyDB = client.db('restaurantCollection').collection('buyData')
+        const galleryDB= client.db('restaurantCollection').collection('gallery')
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         app.get('/', (req, res) => {
             res.send('Hello World!')
         })
         app.get('/top', async (req, res) => { 
-            const sort = req.query.sort
+           
             const result = await restaurantDB.find().sort({ purchase_amount: -1 }).limit(6).toArray();
             res.send(result)
         }) 
@@ -99,11 +100,20 @@ async function run() {
             const newUser = await restaurantDB.insertOne(newFood)
             res.send(newUser);
         }) 
+         
         app.get('/add/:email',verify, async (req, res) => {
             const email = req.params.email
 
             console.log(email);
             const result = await restaurantDB.find({ email }).toArray()
+
+            res.send(result)
+        })
+        app.get('/all/:chef',verify, async (req, res) => {
+            const chef = req.params.chef
+
+            console.log(chef);
+            const result = await restaurantDB.find({made_by:chef }).toArray()
 
             res.send(result)
         })
@@ -166,6 +176,19 @@ async function run() {
             const result = await restaurantDB.find(query).sort({ purchase_amount: -1 }).toArray();
             res.send(result)
         })
+
+        //gallery
+        app.post('/gallery', async (req, res) => {
+            const newFood = req.body;
+            console.log(newFood);
+            const newUser = await galleryDB.insertOne(newFood)
+            res.send(newUser);
+        })
+        app.get('/gallery', async (req, res) => {
+
+            const result = await galleryDB.find().toArray();
+            res.send(result)
+        }) 
 
         // jwt 
         app.post('/jwt', async (req, res) => {
