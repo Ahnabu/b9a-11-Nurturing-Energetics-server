@@ -56,6 +56,7 @@ async function run() {
     try {
         const restaurantDB = client.db('restaurantCollection').collection('allFoods')
         const userDB = client.db('restaurantCollection').collection('users')
+        const buyDB = client.db('restaurantCollection').collection('buyData')
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         app.get('/', (req, res) => {
@@ -78,6 +79,20 @@ async function run() {
             const newUser = await userDB.insertOne(email)
             res.send(newUser);
         }) 
+        app.post('/my-order', async (req, res) => {
+            const data = req.body;
+            console.log(data);
+            const userData = await buyDB.insertOne(data)
+            res.send(userData);
+        }) 
+        app.get('/my-order/:email', verify, async (req, res) => {
+            const email = req.params.email
+
+            console.log(email);
+            const result = await buyDB.find({ userEmail : email }).toArray()
+
+            res.send(result)
+        })
         app.post('/add', async (req, res) => {
             const newFood = req.body;
             console.log(newFood);
@@ -139,7 +154,7 @@ async function run() {
         }) 
         app.delete('/delete/:id',verify, async (req, res) => {
             const id = req.params.id
-            const result = await restaurantDB.deleteOne({ _id: new ObjectId(req.params.id) });
+            const result = await buyDB.deleteOne({ _id: new ObjectId(req.params.id) });
             res.send(result);
         }) 
         app.get('/all', async (req, res) => {
