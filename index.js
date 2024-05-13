@@ -60,7 +60,7 @@ async function run() {
         const galleryDB= client.db('restaurantCollection').collection('gallery')
         const feedbackDB= client.db('restaurantCollection').collection('feedback')
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
         app.get('/', (req, res) => {
             res.send('Hello World!')
         })
@@ -118,7 +118,7 @@ async function run() {
 
             res.send(result)
         })
-        app.get('/user/:email',verify, async (req, res) => {
+        app.get('/user/:email',async (req, res) => {
             const email = req.params.email;
             const query = { email: email }
             console.log(query);
@@ -204,7 +204,7 @@ async function run() {
         // jwt 
         app.post('/jwt', async (req, res) => {
             const email = req.body;
-            const token = jwt.sign(email, process.env.SECRET_KEY, { expiresIn: '10d' }) 
+            const token = jwt.sign(email, process.env.SECRET_KEY, { expiresIn: '1h' }) 
             console.log(email);
             res
                 .cookie('token', token, {
@@ -228,7 +228,7 @@ async function run() {
                 .send({ success: true });
         });
         // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
+        // await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
