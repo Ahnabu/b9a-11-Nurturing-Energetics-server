@@ -113,7 +113,7 @@ async function run() {
         app.get('/all/:chef', async (req, res) => {
             const chef = req.params.chef
 
-            console.log(chef);
+           
             const result = await restaurantDB.find({made_by:chef }).toArray()
 
             res.send(result)
@@ -172,7 +172,7 @@ async function run() {
             
             const filter = req.query.filter
             let query ={}
-            if (filter) query = { food_name: filter }
+            if (filter) query = { food_name:{$regex: filter,$options:'i' }}
             console.log(filter)
             const result = await restaurantDB.find(query).sort({ purchase_amount: -1 }).toArray();
             res.send(result)
